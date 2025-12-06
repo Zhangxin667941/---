@@ -123,9 +123,6 @@ df['LotFrontage'] = df.groupby("Neighborhood")['LotFrontage'].transform(lambda x
 #6. Проверка остатков пропусков
 df.isnull().sum().sum()
 
-#6. Проверка остатков пропусков
-df.isnull().sum().sum()
-
 df.isnull().sum().sort_values(ascending=False).head(30)
 
 df['MasVnrType'] = df['MasVnrType'].fillna("None")
