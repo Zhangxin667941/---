@@ -134,3 +134,81 @@ df.isnull().sum().sum()
 #7. Удаление выбросов (Outliers)
 df = df[df['GrLivArea'] < 4500]
 #Удаляем явно аномальные дома с жилой площадью более 4500 кв. футов. Они нарушают линейные зависимости.
+
+
+#Шаг 3 Предиктивное моделирование
+
+!pip install scikit-learn
+
+# Секция предварительной обработки данных
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import numpy as np
+# # Предположим, что df — это очищенный и обработанный DataFrame
+df_encoded = pd.get_dummies(df, drop_first=True)  # Прямое кодирование категориальных переменных
+# Разделение признаков и целевых переменных
+X = df_encoded.drop("SalePrice", axis=1)  # Удалить целевую переменную «SalePrice»
+y = df_encoded["SalePrice"]  # Целевая переменная — цена дома («SalePrice»).
+# Обучающие и тестовые наборы разделены (80% обучающих, 20% тестовых).
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+#1. Обучение нескольких моделей машинного обучения
+#Модель 1 — Линейная регрессия
+from sklearn.linear_model import LinearRegression
+# Создание модели линейной регрессии
+lr = LinearRegression()
+# Подогнать модель, используя данные обучающего набора.
+lr.fit(X_train, y_train)
+# Используйте модель для прогнозирования на тестовом наборе.
+pred_lr = lr.predict(X_test)
+# Рассчитайте среднюю квадратическую ошибку (MSE)
+mse_lr = mean_squared_error(y_test, pred_lr)
+# Рассчитайте среднеквадратичную ошибку (RMSE)
+rmse_lr = np.sqrt(mse_lr)
+# Рассчитайте оценку R²
+r2_lr = r2_score(y_test, pred_lr)
+# Выходные RMSE и R²
+rmse_lr, r2_lr
+
+#Модель 2 — Random Forest
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+import numpy as np
+
+rf = RandomForestRegressor(
+    n_estimators=400,
+    random_state=42,
+    n_jobs=-1
+)
+
+rf.fit(X_train, y_train)
+pred_rf = rf.predict(X_test)
+mse_rf = mean_squared_error(y_test, pred_rf)   
+rmse_rf = np.sqrt(mse_rf)                    
+r2_rf = r2_score(y_test, pred_rf)
+rmse_rf, r2_rf
+
+!pip install xgboost
+
+#Модель 3 — XGBoost
+from xgboost import XGBRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+import numpy as np
+
+xgb = XGBRegressor(
+    n_estimators=500,
+    learning_rate=0.05,
+    max_depth=4,
+    subsample=0.9,
+    colsample_bytree=0.8,
+    random_state=42
+)
+xgb.fit(X_train, y_train)
+pred_xgb = xgb.predict(X_test)
+mse_xgb = mean_squared_error(y_test, pred_xgb)
+rmse_xgb = np.sqrt(mse_xgb)
+r2_xgb = r2_score(y_test, pred_xgb)
+rmse_xgb, r2_xgb
+
