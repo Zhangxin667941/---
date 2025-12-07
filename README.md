@@ -22,3 +22,4 @@ numpy
 matplotlib
 seaborn
 scikit-learn
+xgboost
