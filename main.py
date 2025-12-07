@@ -212,3 +212,52 @@ rmse_xgb = np.sqrt(mse_xgb)
 r2_xgb = r2_score(y_test, pred_xgb)
 rmse_xgb, r2_xgb
 
+#Таблица сравнения моделей
+import pandas as pd
+
+results = pd.DataFrame({
+    "Model": ["Linear Regression", "Random Forest", "XGBoost"],
+    "RMSE": [rmse_lr, rmse_rf, rmse_xgb],
+    "R²": [r2_lr, r2_rf, r2_xgb]
+})
+
+results
+
+#Выберите лучшую модель и выполните оптимизацию гиперпараметров (настройка гиперпараметров XGBoost).
+from sklearn.model_selection import GridSearchCV
+from xgboost import XGBRegressor
+import numpy as np
+from sklearn.metrics import mean_squared_error
+
+param_grid = {
+    "n_estimators": [300, 500, 800],
+    "learning_rate": [0.01, 0.05, 0.1],
+    "max_depth": [3, 4, 5],
+    "subsample": [0.8, 0.9, 1.0],
+    "colsample_bytree": [0.7, 0.8, 1.0]
+}
+
+grid = GridSearchCV(
+    estimator=XGBRegressor(random_state=42),
+    param_grid=param_grid,
+    scoring="neg_mean_squared_error",   
+    cv=3,
+    verbose=1,
+    n_jobs=-1
+)
+
+grid.fit(X_train, y_train)
+
+best_model = grid.best_estimator_
+best_model
+
+Используйте оптимальную модель для окончательного прогноза
+pred_best = best_model.predict(X_test)
+
+mse_best = mean_squared_error(y_test, pred_best)
+rmse_best = np.sqrt(mse_best)
+
+from sklearn.metrics import r2_score
+r2_best = r2_score(y_test, pred_best)
+
+rmse_best, r2_best
