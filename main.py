@@ -4,7 +4,7 @@ df.head()
 
 !pip install seaborn
 
-#1.Exploratory Data Analysis/Анализ разведочных данных
+#1.Анализ разведочных данных
 import pandas as pd
 import numpy as np
 import seaborn as sns
