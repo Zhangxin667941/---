@@ -1,7 +1,3 @@
-import pandas as pd
-df = pd.read_csv(r"C:\Users\23196\Downloads\train.csv")
-df.head()
-
 !pip install seaborn
 
 #1.Анализ разведочных данных
